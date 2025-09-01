@@ -24,6 +24,7 @@ export default function StartingScreen() {
   const [weather, setWeather] = useState(null);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [locationData, setLocationData] = useState(null);
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
@@ -63,6 +64,8 @@ export default function StartingScreen() {
               `http://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${OPEN_WEATHER_API_KEY}`
             );
             const locationData = await locationResponse.json();
+            setLocationData(locationData[0]);
+            console.log('locationData : ', locationData[0]);
 
             if (locationData.length > 0) {
               const city = locationData[0].name || 'Unknown';
@@ -149,7 +152,7 @@ export default function StartingScreen() {
 
         <TouchableOpacity
           style={styles.forecastButton}
-          onPress={() => navigation.navigate('PredictitonScreen')}
+          onPress={() => navigation.navigate('PredictitonScreen', { locationData: locationData})}
         >
           <Text style={styles.forecastButtonText}>🔍 Search Location</Text>
         </TouchableOpacity>
